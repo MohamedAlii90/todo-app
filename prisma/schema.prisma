@@ -1,0 +1,45 @@
+// QAcart Todo — schema.
+// Deliberately small: a user owns many tasks, nothing else.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+
+  email     String   @unique
+  password  String // hashed with bcrypt
+  firstName String
+  lastName  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks     Task[]
+
+  @@index([email])
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+
+  item        String
+  isCompleted Boolean  @default(false)
+
+  // Ownership is a real foreign key, so every task query can be scoped to its
+  // owner and a deleted account takes its tasks with it.
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([createdAt])
+}
