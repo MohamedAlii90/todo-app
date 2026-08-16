@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Trash2 } from 'lucide-svelte'
+  import { hydrated } from '$lib/hydrated.svelte'
   import type { Task } from '$lib/types'
 
   let {
@@ -12,6 +13,7 @@
     onDelete: (id: number) => Promise<void> | void
   } = $props()
 
+  const ready = hydrated()
   let busy = $state(false)
 
   async function toggle() {
@@ -44,7 +46,7 @@
     type="checkbox"
     checked={todo.isCompleted}
     onchange={toggle}
-    disabled={busy}
+    disabled={busy || !ready.current}
     data-testid="complete-task"
     aria-label={todo.isCompleted ? `Mark ${todo.item} as active` : `Mark ${todo.item} as completed`}
     class="h-5 w-5 shrink-0 cursor-pointer accent-primary disabled:cursor-not-allowed"
@@ -62,7 +64,7 @@
   <button
     type="button"
     onclick={remove}
-    disabled={busy}
+    disabled={busy || !ready.current}
     data-testid="delete"
     aria-label={`Delete ${todo.item}`}
     class="shrink-0 rounded-pill p-2 text-muted-foreground transition-colors hover:bg-destructive/15 hover:text-destructive disabled:cursor-not-allowed disabled:opacity-50"

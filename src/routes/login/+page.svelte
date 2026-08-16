@@ -1,5 +1,8 @@
 <script lang="ts">
   import { goto, invalidateAll } from '$app/navigation'
+  import { hydrated } from '$lib/hydrated.svelte'
+
+  const ready = hydrated()
 
   let email = $state('')
   let password = $state('')
@@ -107,7 +110,7 @@
       id="submit"
       name="submit"
       data-testid="submit"
-      disabled={loading}
+      disabled={loading || !ready.current}
       class="btn btn-primary w-full"
     >
       {loading ? 'Logging in…' : 'Login'}

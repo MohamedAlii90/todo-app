@@ -3,10 +3,12 @@
   import { goto, invalidateAll } from '$app/navigation'
   import { page } from '$app/state'
   import QacartMark from '$lib/components/QacartMark.svelte'
+  import { hydrated } from '$lib/hydrated.svelte'
   import type { LayoutData } from './$types'
 
   let { data, children }: { data: LayoutData; children: any } = $props()
 
+  const ready = hydrated()
   let loggingOut = $state(false)
 
   async function logout() {
@@ -51,7 +53,7 @@
           <span class="hidden text-sm text-muted-foreground sm:inline" data-testid="nav-user">
             {data.user.firstName}
           </span>
-          <button type="button" onclick={logout} disabled={loggingOut} data-testid="logout" class="btn">
+          <button type="button" onclick={logout} disabled={loggingOut || !ready.current} data-testid="logout" class="btn">
             {loggingOut ? 'Logging out…' : 'Logout'}
           </button>
         {:else}

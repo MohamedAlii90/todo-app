@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { hydrated } from '$lib/hydrated.svelte'
+
   let {
     currentPage,
     totalItems,
@@ -11,6 +13,8 @@
     onPaginate: (page: number) => void
   } = $props()
 
+  const ready = hydrated()
+
   const pages = $derived(
     Array.from({ length: Math.ceil(totalItems / perPage) }, (_, i) => i + 1)
   )
@@ -21,6 +25,7 @@
     <button
       type="button"
       onclick={() => onPaginate(pageNumber)}
+      disabled={!ready.current}
       data-testid="pagination-link"
       aria-current={pageNumber === currentPage ? 'page' : undefined}
       class="h-9 w-9 rounded-pill border text-sm transition-colors {pageNumber === currentPage

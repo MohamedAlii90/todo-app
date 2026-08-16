@@ -1,5 +1,8 @@
 <script lang="ts">
   import { goto, invalidateAll } from '$app/navigation'
+  import { hydrated } from '$lib/hydrated.svelte'
+
+  const ready = hydrated()
 
   const ITEM_MIN = 3
   const ITEM_MAX = 120
@@ -87,7 +90,7 @@
     <button
       type="submit"
       data-testid="submit-newTask"
-      disabled={loading}
+      disabled={loading || !ready.current}
       class="btn btn-primary w-full"
     >
       {loading ? 'Creating…' : 'Create Todo'}

@@ -1,5 +1,8 @@
 <script lang="ts">
   import { goto, invalidateAll } from '$app/navigation'
+  import { hydrated } from '$lib/hydrated.svelte'
+
+  const ready = hydrated()
 
   let firstName = $state('')
   let lastName = $state('')
@@ -197,7 +200,7 @@
       {/if}
     </div>
 
-    <button type="submit" data-testid="submit" disabled={loading} class="btn btn-primary w-full">
+    <button type="submit" data-testid="submit" disabled={loading || !ready.current} class="btn btn-primary w-full">
       {loading ? 'Creating account…' : 'Signup'}
     </button>
 
